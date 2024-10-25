@@ -6,7 +6,7 @@ def add_column(conn, column_sql):
         print("Столбец добавлен.")
     except sqlite3.Error as e:
         print(f"Ошибка при добавлении столбца: {e}")
-
+#ew
 if __name__ == "__main__":
     database = "data.db"
     conn = create_connection(database)
