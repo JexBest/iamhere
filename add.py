@@ -1,3 +1,5 @@
+import sqlite3
+
 def add_column(conn, column_sql):
     try:
         cursor = conn.cursor()
