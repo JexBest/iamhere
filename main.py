@@ -1,12 +1,23 @@
-# This is a sample Python script.
+from database.models import create_tables
+from auth.auth import auth_user  # предполагаем, что функция авторизации уже написана
+from diary.diary import add_entry, view_entries
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+def main():
+    create_tables()
+    user_name = auth_user()  # Логика авторизации пользователя
+    if user_name:
+        # Основной цикл работы с дневником
+        while True:
+            command = input("Выберите действие: добавить запись, просмотреть записи, выйти: ").lower()
+            if command == "добавить запись":
+                add_entry(user_name)
+            elif command == "просмотреть записи":
+                view_entries(user_name)
+            elif command == "выйти":
+                print("Завершение работы")
+                break
+            else:
+                print("Неизвестная команда")
 
-
-def print_hi(name):
-    print(f'Hi, {name}')
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+if __name__ == "__main__":
+    main()
