@@ -2,6 +2,8 @@ import sqlite3
 from database.connection import create_connection
 from datetime import datetime
 
+from database.see_all_content import cursor
+
 
 def create_tables():
     conn = create_connection()
@@ -93,6 +95,7 @@ def add_user(telegram_id, username, phone_number):
             print("Пользователь успешно добавлен")
             add_audit_log(
                 telegram_id=telegram_id,
+                entry_created_at=username,
                 phone_number=phone_number,
                 action="create_user",
                 user_created_at=datetime.now()  # можно также запросить из таблицы, если нужно точное значение
@@ -226,3 +229,35 @@ def update_diary_entry(telegram_id, entry_id, new_content):
         finally:
             conn.close()
 
+
+def delete_user(telegram_id):
+    conn = create_connection()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM users WHERE telegram_id = ?", (telegram_id,))
+            entry = cursor.fetchone()
+            if entry:
+                entry_created_at =  entry[2]
+                phone_number = entry[3]
+                old_content = entry[4]
+
+                cursor.execute("DELETE FROM users WHERE telegram_id = ?", (telegram_id,))
+                cursor.execute("DELETE FROM diary_entries WHERE telegram_id = ?", (telegram_id,))
+                conn.commit()
+                print("Запись успешно удалена")
+                add_audit_log(
+                    telegram_id=telegram_id,
+                    action="delete_user",
+                    user_created_at=None,  # Если user_created_at не нужен, можно убрать
+                    entry_created_at=entry_created_at,
+                    old_content=old_content,
+                    new_content=None,
+                    phone_number=phone_number
+                )
+            else:
+                print("Запись с таким ID не найдена.")
+        except sqlite3.Error as e:
+            print(f"Произошла ошибка {e}")
+        finally:
+            conn.close()
