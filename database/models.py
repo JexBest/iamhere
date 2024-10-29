@@ -9,7 +9,8 @@ def create_tables():
         try:
             cursor.execute('''
             CREATE TABLE IF NOT EXISTS users (
-                user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                users_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                telegram_id INTEGER UNIQUE,
                 username TEXT NOT NULL,
                 phone_number TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -18,10 +19,10 @@ def create_tables():
             cursor.execute('''
             CREATE TABLE IF NOT EXISTS diary_entries (
                 entry_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER,
+                telegram_id INTEGER,
                 date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 content TEXT NOT NULL,
-                FOREIGN KEY (user_id) REFERENCES users (user_id)
+                FOREIGN KEY (telegram_id) REFERENCES users (telegram_id)
             )''')
 
             conn.commit()
@@ -31,14 +32,14 @@ def create_tables():
         finally:
             conn.close()
 
-
-def add_user(username, phone_number):
+create_tables()
+def add_user(telegram_id, username, phone_number):
     conn = create_connection()
     if conn:
         try:
-            sql = "INSERT INTO users (username, phone_number) VALUES (?, ?)"
+            sql = "INSERT INTO users (telegram_id, username, phone_number) VALUES (?, ?, ?)"
             cursor = conn.cursor()
-            cursor.execute(sql, (username, phone_number))
+            cursor.execute(sql, (telegram_id, username, phone_number))
             user_id = cursor.lastrowid
             conn.commit()
             print("Пользователь успешно добавлен")
@@ -47,7 +48,22 @@ def add_user(username, phone_number):
             print((f"Произошла ошибка {e}"))
         finally:
             conn.close()
+
+def add_diary_entry (telegram_id , content ):
+    conn = create_connection()
+    if conn:
+        try:
+            sql = "INSERT INTO diary_entries (telegram_id, content) VALUES (?, ?)"
+            cursor = conn.cursor()
+            cursor.execute(sql, (telegram_id , content))
+            entry_id = cursor.lastrowid
+            conn.commit()
+            print("Запись успешно добавлена")
+            return entry_id
+        except sqlite3.Error as e:
+            print(f"Произошла ошибка {e}")
+        finally:
+            conn.close()
             
 
-if __name__ == "__main__":
-    create_tables()
+

@@ -1,6 +1,7 @@
 import sqlite3
+from config import DATABASE_PATH
 
-def create_connection(database="data.db"):
+def create_connection(database=DATABASE_PATH):
     """Создает и возвращает подключение к базе данных."""
     conn = None
     try:
