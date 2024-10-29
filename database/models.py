@@ -32,7 +32,7 @@ def create_tables():
         finally:
             conn.close()
 
-create_tables()
+
 def add_user(telegram_id, username, phone_number):
     conn = create_connection()
     if conn:
@@ -64,6 +64,27 @@ def add_diary_entry (telegram_id , content ):
             print(f"Произошла ошибка {e}")
         finally:
             conn.close()
-            
+
+def filter_diary_by_date(telegram_id, date):
+    conn = create_connection()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            # Выполняем запрос с параметрами telegram_id и date
+            cursor.execute("SELECT * FROM diary_entries WHERE telegram_id = ? AND date(date) = ?", (telegram_id, date))
+            entries = cursor.fetchall()
+
+            # Проверяем, есть ли записи
+            if entries:
+                print("\nВаши записи:")
+                for entry in entries:
+                    print(f"Дата: {entry[2]}, Запись: {entry[3]}")
+            else:
+                print("Записей за указанную дату не найдено.")
+
+        except sqlite3.Error as e:
+            print(f"Произошла ошибка {e}")
+        finally:
+            conn.close()
 
 
