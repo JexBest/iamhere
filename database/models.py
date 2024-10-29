@@ -1,5 +1,5 @@
 import sqlite3
-from .connection import create_connection
+from database.connection import create_connection
 
 
 def create_tables():
@@ -30,3 +30,24 @@ def create_tables():
             print(f"Ошибка при создании таблиц: {e}")
         finally:
             conn.close()
+
+
+def add_user(username, phone_number):
+    conn = create_connection()
+    if conn:
+        try:
+            sql = "INSERT INTO users (username, phone_number) VALUES (?, ?)"
+            cursor = conn.cursor()
+            cursor.execute(sql, (username, phone_number))
+            user_id = cursor.lastrowid
+            conn.commit()
+            print("Пользователь успешно добавлен")
+            return user_id
+        except sqlite3.Error as e:
+            print((f"Произошла ошибка {e}"))
+        finally:
+            conn.close()
+            
+
+if __name__ == "__main__":
+    create_tables()

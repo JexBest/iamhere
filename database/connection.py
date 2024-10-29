@@ -9,3 +9,5 @@ def create_connection(database="data.db"):
     except sqlite3.Error as e:
         print(f"Ошибка подключения к БД: {e}")
     return conn
+if __name__ == "__main__":
+    create_connection()
