@@ -18,7 +18,7 @@ while True:
 content = input("Введите свою запись для дневника, это пока тестовый режим: ")
 
 users = add_user(telegram_id, username, phone_number)
-diary_entries = add_diary_entry(telegram_id, content)
+diary_entries = add_diary_entry(telegram_id, content, photo=None, reminder_time=None)
 
 
 from database.connection import create_connection

@@ -24,7 +24,7 @@ if conn:
             print(entry)
 
         cursor.execute(
-            "SELECT * FROM audit_log")
+            "SELECT * FROM audit_logs")
         audits = cursor.fetchall()  # Извлекаем все записи для удобного вывода
         print("\nСодержание таблицы audit_log:")
         for audit in audits:

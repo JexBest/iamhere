@@ -18,15 +18,31 @@ from database.models import filter_diary_by_date_range, update_diary_entry, filt
 # date_end = input("Введите конечную дату за которую вы хотите найти записи в формате 'ГГГГ-ММ-ДД': ")
 # entries = filter_diary_by_date_range (telegram_id, date_start, date_end)
 #
-# entry_id = input("Введи ID записи для редактирования: ")
-# new_content = input("Введите новый комментарий: ")
+# telegram_id = input("Для тестового запроса введите телеграмм id: ")
+# entry_id = input("Введите ID записи для редактирования: ")
 #
-# content = update_diary_entry(telegram_id, entry_id, new_content)
+# # Спрашиваем, что пользователь хочет изменить
+# new_content = input("Введите новый комментарий (или оставьте пустым): ").strip()
+# new_photo_path = input("Введите новую ссылку на фото (или оставьте пустым): ").strip()
+# new_reminder_time = input("Введите новую дату напоминания (или оставьте пустым): ").strip()
+#
+# # Подготавливаем аргументы для обновления
+# kwargs = {}
+# if new_content:
+#     kwargs['content'] = new_content
+# if new_photo_path:
+#     kwargs['photo_path'] = new_photo_path
+# if new_reminder_time:
+#     kwargs['reminder_time'] = new_reminder_time
+#
+# # Обновляем запись, передав только изменённые значения
+# update_diary_entry(telegram_id, entry_id, **kwargs)
+
 # #тут выведем еще раз запись что бы убедиться что она изменилась
 # entries = filter_diary_by_date_range (telegram_id, date_start, date_end)
-telegram_id = input("Для для удаления id: ")
-
-delete = delete_user(telegram_id)
+# telegram_id = input("Для для удаления id: ")
+#
+# delete = delete_user(telegram_id)
 
 
 
